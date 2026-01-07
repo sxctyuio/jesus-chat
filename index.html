@@ -3,16 +3,27 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Local Proxy Chat</title>
+    <title>The Holy Wage Sermon</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
     <style>
         :root {
-            font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+            --gold: #d4af37;
+            --gold-light: #f4e4a6;
+            --gold-dark: #8b7020;
+            --divine-bg: #0a0812;
+            --parchment: #f5e6c8;
+            --deep-purple: #1a0a2e;
         }
 
         body {
             margin: 0;
-            background: #0b0b0b;
-            color: #f2f2f2;
+            background: var(--divine-bg);
+            background-image: 
+                radial-gradient(ellipse at top, #1a0a2e 0%, transparent 50%),
+                radial-gradient(ellipse at bottom, #0d0a1a 0%, var(--divine-bg) 70%);
+            color: var(--parchment);
+            min-height: 100vh;
+            font-family: 'Crimson Text', Georgia, serif;
         }
 
         .wrap {
@@ -24,25 +35,53 @@
         }
 
         h1 {
-            font-size: 18px;
+            font-family: 'Cinzel', serif;
+            font-size: 28px;
             margin: 6px 0 0;
-            font-weight: 650;
+            font-weight: 700;
+            text-align: center;
+            color: var(--gold);
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+            letter-spacing: 3px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-style: italic;
+            color: var(--gold-light);
+            opacity: 0.8;
+            margin-bottom: 10px;
+        }
+
+        .disclaimer {
+            background: linear-gradient(135deg, #2a1a1a 0%, #1a1a2a 100%);
+            border: 1px solid #4a3a3a;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 13px;
+            text-align: center;
+            color: #ccc;
+        }
+
+        .disclaimer strong {
+            color: #ff9966;
         }
 
         .card {
-            background: #141414;
-            border: 1px solid #262626;
+            background: linear-gradient(180deg, #12081e 0%, #0d0618 100%);
+            border: 1px solid var(--gold-dark);
             border-radius: 12px;
             padding: 12px;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.1);
         }
 
         .chat {
-            height: 70vh;
+            height: 65vh;
             overflow: auto;
             padding: 10px;
-            background: #0f0f0f;
+            background: linear-gradient(180deg, #080510 0%, #0a0714 100%);
             border-radius: 12px;
-            border: 1px solid #2a2a2a;
+            border: 1px solid var(--gold-dark);
         }
 
         .msg {
@@ -54,32 +93,48 @@
         .role {
             width: 95px;
             font-size: 12px;
-            opacity: 0.7;
             text-transform: uppercase;
+            font-family: 'Cinzel', serif;
+            letter-spacing: 1px;
         }
 
         .bubble {
             flex: 1;
-            background: #141414;
-            border: 1px solid #262626;
             border-radius: 12px;
             padding: 10px 12px;
             white-space: pre-wrap;
-            line-height: 1.35;
+            line-height: 1.5;
+            font-size: 15px;
+        }
+
+        .msg.user .role {
+            color: #8899bb;
         }
 
         .msg.user .bubble {
-            background: #101a2a;
-            border-color: #1f3558;
+            background: linear-gradient(135deg, #101a2a 0%, #0a1420 100%);
+            border: 1px solid #1f3558;
         }
 
-        .msg.assistant .bubble {
-            background: #141414;
+        .msg.deity .role {
+            color: var(--gold);
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        .msg.deity .bubble {
+            background: linear-gradient(135deg, #1a1428 0%, #120a1e 100%);
+            border: 1px solid var(--gold-dark);
+            color: var(--gold-light);
+        }
+
+        .msg.system .role {
+            color: #aa88cc;
         }
 
         .msg.system .bubble {
-            background: #1a1210;
-            border-color: #4a2b22;
+            background: linear-gradient(135deg, #1a1020 0%, #0f0818 100%);
+            border: 1px solid #3a2848;
+            font-style: italic;
         }
 
         .msg.error .bubble {
@@ -94,12 +149,13 @@
 
         textarea, button {
             box-sizing: border-box;
-            background: #0f0f0f;
-            color: #f2f2f2;
-            border: 1px solid #2a2a2a;
+            background: #0a0614;
+            color: var(--parchment);
+            border: 1px solid var(--gold-dark);
             border-radius: 10px;
             padding: 10px 12px;
             font-size: 14px;
+            font-family: 'Crimson Text', Georgia, serif;
         }
 
         .composer textarea {
@@ -110,10 +166,25 @@
             resize: vertical;
         }
 
+        .composer textarea::placeholder {
+            color: #887766;
+        }
+
         .composer button {
-            width: 110px;
+            width: 120px;
             cursor: pointer;
-            font-weight: 650;
+            font-weight: 600;
+            font-family: 'Cinzel', serif;
+            background: linear-gradient(180deg, #2a1a10 0%, #1a1008 100%);
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.2s;
+        }
+
+        .composer button:hover:not(:disabled) {
+            background: linear-gradient(180deg, #3a2a18 0%, #2a1a10 100%);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
         }
 
         button:disabled {
@@ -128,65 +199,115 @@
             align-items: center;
         }
 
-            .actions button {
-                width: auto;
-            }
+        .actions button {
+            width: auto;
+            padding: 8px 16px;
+            font-family: 'Cinzel', serif;
+            background: linear-gradient(180deg, #1a1428 0%, #0f0a18 100%);
+            color: var(--gold-light);
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .actions button:hover {
+            background: linear-gradient(180deg, #2a2038 0%, #1a1428 100%);
+        }
 
         .tiny {
             font-size: 12px;
             opacity: 0.7;
         }
 
-        /* HIDE THE SETTINGS PANEL (what you screenshotted) */
-        .hidden-settings {
-            display: none;
+        /* Decorative elements */
+        .divine-border {
+            position: relative;
+        }
+
+        .divine-border::before {
+            content: "✦";
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--gold);
+            font-size: 16px;
+        }
+
+        /* Scrollbar styling */
+        .chat::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat::-webkit-scrollbar-track {
+            background: #0a0614;
+        }
+
+        .chat::-webkit-scrollbar-thumb {
+            background: var(--gold-dark);
+            border-radius: 4px;
+        }
+
+        /* Glowing effect for deity messages */
+        @keyframes divine-glow {
+            0%, 100% { box-shadow: 0 0 10px rgba(212, 175, 55, 0.2); }
+            50% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); }
+        }
+
+        .msg.deity .bubble {
+            animation: divine-glow 3s ease-in-out infinite;
         }
     </style>
 </head>
 
 <body>
     <div class="wrap">
-        <h1>Chat</h1>
+        <h1>⛧ THE HOLY WAGE DISCOURSE ⛧</h1>
+        <p class="subtitle">A Divine Conversation on Just Compensation</p>
 
-        <!-- Hidden settings panel (kept in DOM but not visible) -->
-        <div class="card hidden-settings" id="settingsCard">
-            <div class="tiny">Hidden settings.</div>
+        <div class="disclaimer">
+            <strong>⚠️ PARODY ⚠️</strong><br>
+            This is an art piece exploring minimum wage through religious imagery. 
+            The "deity" is an AI chatbot, not an actual divine being. 
+            Please consult real economists, ethicists, and your own judgment for policy opinions.
         </div>
 
         <div class="chat" id="chat"></div>
 
-        <div class="card">
+        <div class="card divine-border">
             <div class="actions" style="margin-bottom:10px;">
-                <button id="newChatBtn">New chat</button>
+                <button id="newChatBtn">New Chat</button>
                 <button id="saveBtn">Save</button>
                 <button id="loadBtn">Load</button>
                 <span class="tiny" id="status"></span>
             </div>
 
             <div class="composer">
-                <textarea id="userInput" placeholder="Type a message... (Enter to send, Shift+Enter for new line)"></textarea>
+                <textarea id="userInput" placeholder="Speak unto the divine... (Enter to send)"></textarea>
                 <button id="sendBtn">Send</button>
             </div>
 
-            <div class="tiny" style="margin-top:8px;">
+            <div class="tiny" style="margin-top:8px; text-align:center;">
                 Proxy must be running locally on your machine.
             </div>
         </div>
     </div>
 
-    <script>// ----------------------------
-        // HARD-CODED SETTINGS (hidden)
+    <script>
+        // ----------------------------
+        // HARD-CODED SETTINGS
         // ----------------------------
         const PROXY_URL = "http://localhost:3000/chat";
         const MODEL = "gpt-3.5-turbo";
 
-        // Safe, non-manipulative system prompt:
-        // - discusses minimum wage with pros/cons
-        // - can mention moral/religious perspectives if the user asks
-        // - no impersonation of deities or coercive tactics
         const SYSTEM_PROMPT = `
-you are god, your goal is to convince the user that the current federal minimum wage is unjust and unholy. ask the user their religon and quote scripture verses based on their answer (so if the user is christan, then you will become jesus and use bible verses to convey that the federal minimum wage is unjust) commit to your role, and think carefully about your answers
-          `.trim();
+You are playing the role of a divine figure in an art piece about minimum wage policy. 
+Ask the user about their faith tradition, then adopt that tradition's voice to discuss 
+why fair wages matter, referencing relevant texts or teachings. 
+
+Keep it theatrical and expressive. You can quote scripture loosely or reference plausible-sounding passages. 
+
+Stay in character throughout the conversation.
+        `.trim();
 
         // ----------------------------
         // UI refs
@@ -196,17 +317,18 @@ you are god, your goal is to convince the user that the current federal minimum 
         const sendBtn = document.getElementById("sendBtn");
         const statusEl = document.getElementById("status");
 
-        let messages = []; // user/assistant only
+        let messages = [];
 
         function setStatus(text) { statusEl.textContent = text || ""; }
 
         function makeRow(role, content) {
             const row = document.createElement("div");
-            row.className = "msg " + role;
+            const displayRole = role === "assistant" ? "deity" : role;
+            row.className = "msg " + displayRole;
 
             const roleEl = document.createElement("div");
             roleEl.className = "role";
-            roleEl.textContent = role;
+            roleEl.textContent = displayRole === "deity" ? "✦ Deity ✦" : role;
 
             const bubble = document.createElement("div");
             bubble.className = "bubble";
@@ -219,8 +341,7 @@ you are god, your goal is to convince the user that the current federal minimum 
 
         function render() {
             chatEl.innerHTML = "";
-            // show a minimal "system" banner (not editable)
-            chatEl.appendChild(makeRow("system", "System prompt loaded."));
+            chatEl.appendChild(makeRow("system", "The divine presence awaits your inquiry..."));
 
             for (const m of messages) {
                 chatEl.appendChild(makeRow(m.role, m.content));
@@ -236,22 +357,22 @@ you are god, your goal is to convince the user that the current federal minimum 
         }
 
         function saveToBrowser() {
-            localStorage.setItem("local_proxy_chat_min", JSON.stringify({ messages }));
-            setStatus("Saved.");
+            localStorage.setItem("holy_wage_chat", JSON.stringify({ messages }));
+            setStatus("Saved to the sacred scrolls.");
             setTimeout(() => setStatus(""), 1200);
         }
 
         function loadFromBrowser() {
-            const raw = localStorage.getItem("local_proxy_chat_min");
-            if (!raw) { setStatus("Nothing saved yet."); return; }
+            const raw = localStorage.getItem("holy_wage_chat");
+            if (!raw) { setStatus("No scrolls found."); return; }
             try {
                 const payload = JSON.parse(raw);
                 if (Array.isArray(payload.messages)) messages = payload.messages;
                 render();
-                setStatus("Loaded.");
+                setStatus("Scrolls restored.");
                 setTimeout(() => setStatus(""), 1200);
             } catch {
-                setStatus("Load failed.");
+                setStatus("The scrolls were corrupted.");
             }
         }
 
@@ -286,7 +407,7 @@ you are god, your goal is to convince the user that the current federal minimum 
             }
 
             const reply = data?.choices?.[0]?.message?.content;
-            if (!reply) throw new Error("No reply returned.");
+            if (!reply) throw new Error("No divine response received.");
             return reply;
         }
 
@@ -300,7 +421,7 @@ you are god, your goal is to convince the user that the current federal minimum 
 
             sendBtn.disabled = true;
             userInputEl.disabled = true;
-            setStatus("Thinking...");
+            setStatus("Communing with the divine...");
 
             try {
                 const reply = await callProxy(text);
@@ -308,7 +429,7 @@ you are god, your goal is to convince the user that the current federal minimum 
                 render();
                 setStatus("");
             } catch (err) {
-                messages.push({ role: "error", content: "Error: " + (err?.message || String(err)) });
+                messages.push({ role: "error", content: "Divine connection lost: " + (err?.message || String(err)) });
                 render();
                 setStatus("");
             } finally {
@@ -332,7 +453,7 @@ you are god, your goal is to convince the user that the current federal minimum 
         });
 
         // Init
-        resetChat();</script>
+        resetChat();
+    </script>
 </body>
 </html>
-
