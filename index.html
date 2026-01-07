@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>The Holy Wage Sermon</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #d4af37;
+            --gold-light: #f4e4a6;
+            --gold-dark: #8b7020;
+            --divine-bg: #0a0812;
+            --parchment: #f5e6c8;
+            --deep-purple: #1a0a2e;
+        }
+
+        body {
+            margin: 0;
+            background: var(--divine-bg);
+            background-image: 
+                radial-gradient(ellipse at top, #1a0a2e 0%, transparent 50%),
+                radial-gradient(ellipse at bottom, #0d0a1a 0%, var(--divine-bg) 70%);
+            color: var(--parchment);
+            min-height: 100vh;
+            font-family: 'Crimson Text', Georgia, serif;
+        }
+
+        .wrap {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 16px;
+            display: grid;
+            gap: 12px;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 28px;
+            margin: 6px 0 0;
+            font-weight: 700;
+            text-align: center;
+            color: var(--gold);
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+            letter-spacing: 3px;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-style: italic;
+            color: var(--gold-light);
+            opacity: 0.8;
+            margin-bottom: 10px;
+        }
+
+        .disclaimer {
+            background: linear-gradient(135deg, #2a1a1a 0%, #1a1a2a 100%);
+            border: 1px solid #4a3a3a;
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 13px;
+            text-align: center;
+            color: #ccc;
+        }
+
+        .disclaimer strong {
+            color: #ff9966;
+        }
+
+        .card {
+            background: linear-gradient(180deg, #12081e 0%, #0d0618 100%);
+            border: 1px solid var(--gold-dark);
+            border-radius: 12px;
+            padding: 12px;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.1);
+        }
+
+        .chat {
+            height: 65vh;
+            overflow: auto;
+            padding: 10px;
+            background: linear-gradient(180deg, #080510 0%, #0a0714 100%);
+            border-radius: 12px;
+            border: 1px solid var(--gold-dark);
+        }
+
+        .msg {
+            display: flex;
+            margin: 10px 0;
+            gap: 10px;
+        }
+
+        .role {
+            width: 95px;
+            font-size: 12px;
+            text-transform: uppercase;
+            font-family: 'Cinzel', serif;
+            letter-spacing: 1px;
+        }
+
+        .bubble {
+            flex: 1;
+            border-radius: 12px;
+            padding: 10px 12px;
+            white-space: pre-wrap;
+            line-height: 1.5;
+            font-size: 15px;
+        }
+
+        .msg.user .role {
+            color: #8899bb;
+        }
+
+        .msg.user .bubble {
+            background: linear-gradient(135deg, #101a2a 0%, #0a1420 100%);
+            border: 1px solid #1f3558;
+        }
+
+        .msg.deity .role {
+            color: var(--gold);
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        .msg.deity .bubble {
+            background: linear-gradient(135deg, #1a1428 0%, #120a1e 100%);
+            border: 1px solid var(--gold-dark);
+            color: var(--gold-light);
+        }
+
+        .msg.system .role {
+            color: #aa88cc;
+        }
+
+        .msg.system .bubble {
+            background: linear-gradient(135deg, #1a1020 0%, #0f0818 100%);
+            border: 1px solid #3a2848;
+            font-style: italic;
+        }
+
+        .msg.error .bubble {
+            background: #2a1010;
+            border-color: #6a2222;
+        }
+
+        .composer {
+            display: flex;
+            gap: 10px;
+        }
+
+        textarea, button {
+            box-sizing: border-box;
+            background: #0a0614;
+            color: var(--parchment);
+            border: 1px solid var(--gold-dark);
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 14px;
+            font-family: 'Crimson Text', Georgia, serif;
+        }
+
+        .composer textarea {
+            width: 100%;
+            min-height: 44px;
+            height: 44px;
+            max-height: 160px;
+            resize: vertical;
+        }
+
+        .composer textarea::placeholder {
+            color: #887766;
+        }
+
+        .composer button {
+            width: 120px;
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'Cinzel', serif;
+            background: linear-gradient(180deg, #2a1a10 0%, #1a1008 100%);
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.2s;
+        }
+
+        .composer button:hover:not(:disabled) {
+            background: linear-gradient(180deg, #3a2a18 0%, #2a1a10 100%);
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+        }
+
+        button:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .actions button {
+            width: auto;
+            padding: 8px 16px;
+            font-family: 'Cinzel', serif;
+            background: linear-gradient(180deg, #1a1428 0%, #0f0a18 100%);
+            color: var(--gold-light);
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .actions button:hover {
+            background: linear-gradient(180deg, #2a2038 0%, #1a1428 100%);
+        }
+
+        .tiny {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        /* Decorative elements */
+        .divine-border {
+            position: relative;
+        }
+
+        .divine-border::before {
+            content: "✦";
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: var(--gold);
+            font-size: 16px;
+        }
+
+        /* Scrollbar styling */
+        .chat::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat::-webkit-scrollbar-track {
+            background: #0a0614;
+        }
+
+        .chat::-webkit-scrollbar-thumb {
+            background: var(--gold-dark);
+            border-radius: 4px;
+        }
+
+        /* Glowing effect for deity messages */
+        @keyframes divine-glow {
+            0%, 100% { box-shadow: 0 0 10px rgba(212, 175, 55, 0.2); }
+            50% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.4); }
+        }
+
+        .msg.deity .bubble {
+            animation: divine-glow 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <h1>⛧ THE HOLY WAGE DISCOURSE ⛧</h1>
+        <p class="subtitle">A Divine Conversation on Just Compensation</p>
+
+        <div class="disclaimer">
+            <strong>⚠️ PARODY ⚠️</strong><br>
+            This is an art piece exploring minimum wage through religious imagery. 
+            The "deity" is an AI chatbot, not an actual divine being. 
+            Please consult real economists, ethicists, and your own judgment for policy opinions.
+        </div>
+
+        <div class="chat" id="chat"></div>
+
+        <div class="card divine-border">
+            <div class="actions" style="margin-bottom:10px;">
+                <button id="newChatBtn">New Chat</button>
+                <button id="saveBtn">Save</button>
+                <button id="loadBtn">Load</button>
+                <span class="tiny" id="status"></span>
+            </div>
+
+            <div class="composer">
+                <textarea id="userInput" placeholder="Speak unto the divine... (Enter to send)"></textarea>
+                <button id="sendBtn">Send</button>
+            </div>
+
+            <div class="tiny" style="margin-top:8px; text-align:center;">
+                Proxy must be running locally on your machine.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ----------------------------
+        // HARD-CODED SETTINGS
+        // ----------------------------
+        const PROXY_URL = "http://localhost:3000/chat";
+        const MODEL = "gpt-3.5-turbo";
+
+        const SYSTEM_PROMPT = `
+You are playing the role of a divine figure in an art piece about minimum wage policy. 
+Ask the user about their faith tradition, then adopt that tradition's voice to discuss 
+why fair wages matter, referencing relevant texts or teachings. 
+
+Keep it theatrical and expressive. You can quote scripture loosely or reference plausible-sounding passages. 
+
+Stay in character throughout the conversation.
+        `.trim();
+
+        // ----------------------------
+        // UI refs
+        // ----------------------------
+        const chatEl = document.getElementById("chat");
+        const userInputEl = document.getElementById("userInput");
+        const sendBtn = document.getElementById("sendBtn");
+        const statusEl = document.getElementById("status");
+
+        let messages = [];
+
+        function setStatus(text) { statusEl.textContent = text || ""; }
+
+        function makeRow(role, content) {
+            const row = document.createElement("div");
+            const displayRole = role === "assistant" ? "deity" : role;
+            row.className = "msg " + displayRole;
+
+            const roleEl = document.createElement("div");
+            roleEl.className = "role";
+            roleEl.textContent = displayRole === "deity" ? "✦ Deity ✦" : role;
+
+            const bubble = document.createElement("div");
+            bubble.className = "bubble";
+            bubble.textContent = content;
+
+            row.appendChild(roleEl);
+            row.appendChild(bubble);
+            return row;
+        }
+
+        function render() {
+            chatEl.innerHTML = "";
+            chatEl.appendChild(makeRow("system", "The divine presence awaits your inquiry..."));
+
+            for (const m of messages) {
+                chatEl.appendChild(makeRow(m.role, m.content));
+            }
+            chatEl.scrollTop = chatEl.scrollHeight;
+        }
+
+        function resetChat() {
+            messages = [];
+            render();
+            setStatus("");
+            userInputEl.focus();
+        }
+
+        function saveToBrowser() {
+            localStorage.setItem("holy_wage_chat", JSON.stringify({ messages }));
+            setStatus("Saved to the sacred scrolls.");
+            setTimeout(() => setStatus(""), 1200);
+        }
+
+        function loadFromBrowser() {
+            const raw = localStorage.getItem("holy_wage_chat");
+            if (!raw) { setStatus("No scrolls found."); return; }
+            try {
+                const payload = JSON.parse(raw);
+                if (Array.isArray(payload.messages)) messages = payload.messages;
+                render();
+                setStatus("Scrolls restored.");
+                setTimeout(() => setStatus(""), 1200);
+            } catch {
+                setStatus("The scrolls were corrupted.");
+            }
+        }
+
+        function buildRequestBody(userText) {
+            const reqMessages = [
+                { role: "system", content: SYSTEM_PROMPT },
+                ...messages,
+                { role: "user", content: userText }
+            ];
+
+            return {
+                model: MODEL,
+                messages: reqMessages,
+                temperature: 0.7
+            };
+        }
+
+        async function callProxy(userText) {
+            const res = await fetch(PROXY_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(buildRequestBody(userText))
+            });
+
+            const text = await res.text();
+            let data;
+            try { data = JSON.parse(text); } catch { }
+
+            if (!res.ok) {
+                const msg = data?.error?.message || text || `HTTP ${res.status}`;
+                throw new Error(msg);
+            }
+
+            const reply = data?.choices?.[0]?.message?.content;
+            if (!reply) throw new Error("No divine response received.");
+            return reply;
+        }
+
+        async function onSend() {
+            const text = userInputEl.value.trim();
+            if (!text) return;
+
+            messages.push({ role: "user", content: text });
+            userInputEl.value = "";
+            render();
+
+            sendBtn.disabled = true;
+            userInputEl.disabled = true;
+            setStatus("Communing with the divine...");
+
+            try {
+                const reply = await callProxy(text);
+                messages.push({ role: "assistant", content: reply });
+                render();
+                setStatus("");
+            } catch (err) {
+                messages.push({ role: "error", content: "Divine connection lost: " + (err?.message || String(err)) });
+                render();
+                setStatus("");
+            } finally {
+                sendBtn.disabled = false;
+                userInputEl.disabled = false;
+                userInputEl.focus();
+            }
+        }
+
+        // Events
+        document.getElementById("newChatBtn").addEventListener("click", resetChat);
+        document.getElementById("saveBtn").addEventListener("click", saveToBrowser);
+        document.getElementById("loadBtn").addEventListener("click", loadFromBrowser);
+        sendBtn.addEventListener("click", onSend);
+
+        userInputEl.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                onSend();
+            }
+        });
+
+        // Init
+        resetChat();
+    </script>
+</body>
+</html>
