@@ -256,6 +256,69 @@
         .msg.deity .bubble {
             animation: divine-glow 3s ease-in-out infinite;
         }
+
+        /* Hidden class */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Start screen */
+        .start-screen {
+            height: 65vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, #080510 0%, #0a0714 100%);
+            border-radius: 12px;
+            border: 1px solid var(--gold-dark);
+        }
+
+        .start-content {
+            text-align: center;
+        }
+
+        .start-symbol {
+            font-size: 64px;
+            color: var(--gold);
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.6);
+            animation: divine-glow 3s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+
+        .start-content h2 {
+            font-family: 'Cinzel', serif;
+            color: var(--gold);
+            font-size: 28px;
+            margin: 0 0 10px 0;
+            letter-spacing: 2px;
+        }
+
+        .start-content p {
+            color: var(--gold-light);
+            opacity: 0.7;
+            margin: 0 0 30px 0;
+            font-style: italic;
+        }
+
+        .start-content button {
+            font-family: 'Cinzel', serif;
+            font-size: 18px;
+            padding: 14px 48px;
+            background: linear-gradient(180deg, #2a1a10 0%, #1a1008 100%);
+            color: var(--gold);
+            border: 1px solid var(--gold-dark);
+            border-radius: 10px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            transition: all 0.3s;
+        }
+
+        .start-content button:hover {
+            background: linear-gradient(180deg, #3a2a18 0%, #2a1a10 100%);
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.4);
+            transform: scale(1.05);
+        }
     </style>
 </head>
 
@@ -271,9 +334,18 @@
             Please consult real economists, ethicists, and your own judgment for policy opinions.
         </div>
 
-        <div class="chat" id="chat"></div>
+        <div class="start-screen" id="startScreen">
+            <div class="start-content">
+                <div class="start-symbol">✦</div>
+                <h2>The Divine Awaits</h2>
+                <p>Enter to receive wisdom on just compensation</p>
+                <button id="startBtn">Begin</button>
+            </div>
+        </div>
 
-        <div class="card divine-border">
+        <div class="chat hidden" id="chat"></div>
+
+        <div class="card divine-border hidden" id="chatControls">
             <div class="actions" style="margin-bottom:10px;">
                 <button id="newChatBtn">New Chat</button>
                 <button id="saveBtn">Save</button>
@@ -316,6 +388,9 @@ Stay in character throughout the conversation.
         const userInputEl = document.getElementById("userInput");
         const sendBtn = document.getElementById("sendBtn");
         const statusEl = document.getElementById("status");
+        const startScreen = document.getElementById("startScreen");
+        const chatControls = document.getElementById("chatControls");
+        const startBtn = document.getElementById("startBtn");
 
         let messages = [];
 
@@ -445,15 +520,19 @@ Stay in character throughout the conversation.
         document.getElementById("loadBtn").addEventListener("click", loadFromBrowser);
         sendBtn.addEventListener("click", onSend);
 
+        startBtn.addEventListener("click", () => {
+            startScreen.classList.add("hidden");
+            chatEl.classList.remove("hidden");
+            chatControls.classList.remove("hidden");
+            resetChat();
+        });
+
         userInputEl.addEventListener("keydown", (e) => {
             if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
                 onSend();
             }
         });
-
-        // Init
-        resetChat();
     </script>
 </body>
 </html>
